@@ -19,6 +19,11 @@ frontend/dist/
 frontend/dist-ssr/
 frontend/.vite/
 
+# Compiled config files (generated from .ts sources)
+frontend/vite.config.js
+frontend/eslint.config.js
+frontend/capacitor.config.js
+
 # Capacitor native projects
 frontend/android/
 frontend/ios/
