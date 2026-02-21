@@ -49,5 +49,10 @@ htmlcov/
 .coverage
 coverage/
 
+# Playwright
+frontend/playwright-report/
+frontend/test-results/
+frontend/playwright.config.js
+
 # Misc
 *.log
