@@ -1,0 +1,39 @@
+rules:
+  - id: no-hardcoded-secrets
+    patterns:
+      - pattern-regex: (password|secret|api_key|token)\s*=\s*["'][^"']+["']
+    message: "Potential hardcoded secret found"
+    languages: [python, typescript, javascript]
+    severity: ERROR
+
+  - id: no-sql-injection
+    patterns:
+      - pattern: |
+          $QUERY = f"... {$VAR} ..."
+    message: "Potential SQL injection via f-string"
+    languages: [python]
+    severity: ERROR
+
+  - id: no-eval
+    pattern: eval(...)
+    message: "Avoid using eval()"
+    languages: [python, javascript, typescript]
+    severity: ERROR
+
+  - id: no-exec
+    pattern: exec(...)
+    message: "Avoid using exec()"
+    languages: [python]
+    severity: WARNING
+
+  - id: no-innerhtml
+    pattern: $EL.innerHTML = ...
+    message: "Avoid direct innerHTML assignment - use safe DOM APIs"
+    languages: [javascript, typescript]
+    severity: WARNING
+
+  - id: no-document-write
+    pattern: document.write(...)
+    message: "Avoid document.write()"
+    languages: [javascript, typescript]
+    severity: WARNING

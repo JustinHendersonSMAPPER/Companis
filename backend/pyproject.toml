@@ -1,0 +1,92 @@
+[project]
+name = "souschefai-backend"
+version = "0.1.0"
+description = "SousChefAI - AI-powered recipe assistant backend"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "aiosqlite>=0.20.0",
+    "alembic>=1.14.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-multipart>=0.0.18",
+    "httpx>=0.28.0",
+    "authlib>=1.4.0",
+    "itsdangerous>=2.2.0",
+    "openai>=1.60.0",
+    "anthropic>=0.42.0",
+    "ollama>=0.4.0",
+    "pillow>=11.1.0",
+    "python-barcode>=0.15.1",
+    "pyzbar>=0.1.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.9.0",
+    "pyright>=1.1.392",
+    "bandit>=1.8.0",
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.28.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "N",     # pep8-naming
+    "UP",    # pyupgrade
+    "B",     # flake8-bugbear
+    "S",     # flake8-bandit
+    "A",     # flake8-builtins
+    "C4",    # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "T20",   # flake8-print
+    "RET",   # flake8-return
+    "SIM",   # flake8-simplify
+    # "TCH" omitted: conflicts with FastAPI runtime type annotations
+    "PTH",   # flake8-use-pathlib
+    "RUF",   # ruff-specific rules
+]
+ignore = [
+    "S101",  # assert used (needed for tests)
+    "S105",  # hardcoded password (false positives on variable names)
+    "S106",  # hardcoded password (false positives on variable names)
+    "B008",  # function call in default argument (FastAPI Depends)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101", "B105"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
