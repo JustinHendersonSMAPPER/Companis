@@ -84,6 +84,13 @@ skips = ["B101", "B105"]
 asyncio_mode = "auto"
 testpaths = ["tests"]
 
+[tool.coverage.run]
+concurrency = ["greenlet", "thread"]
+source = ["app"]
+
+[tool.coverage.report]
+show_missing = true
+
 [tool.setuptools.packages.find]
 where = ["."]
 
