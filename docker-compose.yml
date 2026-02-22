@@ -2,18 +2,18 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "6000:6000"
     env_file:
       - ./backend/.env
     volumes:
       - ./backend:/app
       - sqlite-data:/app/data
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 6000 --reload
 
   frontend:
     build: ./frontend
     ports:
-      - "80:80"
+      - "6001:80"
     depends_on:
       - backend
 
