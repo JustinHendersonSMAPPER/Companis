@@ -4,6 +4,7 @@ import asyncio
 import json
 from typing import Any
 
+from app.config import settings
 from app.services.ai.base import AIService
 
 
@@ -15,7 +16,7 @@ class ClaudeLocalService(AIService):
             "claude",
             "--print",
             "--model",
-            "claude-sonnet-4-20250514",
+            settings.claude_local_model,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,

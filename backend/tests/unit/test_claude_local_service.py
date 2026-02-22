@@ -8,6 +8,7 @@ be installed.
 
 from __future__ import annotations
 
+import asyncio
 import json
 from typing import Any
 from unittest.mock import AsyncMock, patch
@@ -71,6 +72,29 @@ def claude_service() -> Any:
     from app.services.ai.claude_local import ClaudeLocalService
 
     return ClaudeLocalService()
+
+
+# ---------------------------------------------------------------------------
+# settings.claude_local_model usage test
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+class TestClaudeLocalModelFromSettings:
+    @patch("asyncio.create_subprocess_exec")
+    async def test_uses_settings_model_not_hardcoded(
+        self, mock_exec: AsyncMock, claude_service: Any, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """_run_claude should use settings.claude_local_model, not a hardcoded value."""
+        monkeypatch.setattr(
+            "app.services.ai.claude_local.settings",
+            type("FakeSettings", (), {"claude_local_model": "test-model-xyz"})(),
+        )
+        proc = _make_subprocess_mock("output")
+        mock_exec.return_value = proc
+        await claude_service._run_claude("test prompt")
+        call_args = mock_exec.call_args[0]
+        assert "test-model-xyz" in call_args
 
 
 # ---------------------------------------------------------------------------
