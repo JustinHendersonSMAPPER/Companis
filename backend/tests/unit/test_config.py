@@ -32,7 +32,7 @@ class TestDefaultSettings:
 
     def test_default_host(self) -> None:
         s = Settings(_env_file=None, _cli_parse_args=[])  # type: ignore[call-arg]
-        assert s.host == "0.0.0.0"
+        assert s.host == "0.0.0.0"  # noqa: S104
 
     def test_default_port(self) -> None:
         s = Settings(_env_file=None, _cli_parse_args=[])  # type: ignore[call-arg]

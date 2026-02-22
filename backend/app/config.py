@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     allowed_origins: list[str] = ["http://localhost:6001"]
 
     # Server
-    host: str = "0.0.0.0"
+    host: str = "0.0.0.0"  # noqa: S104
     port: int = 6000
 
     # Database
