@@ -22,7 +22,6 @@ from app.services.auth import (
     get_oauth_user_info,
 )
 
-
 # ---------------------------------------------------------------------------
 # get_oauth_authorization_url tests
 # ---------------------------------------------------------------------------
@@ -112,12 +111,15 @@ class TestGetOAuthUserInfoGoogle:
         mock_settings.google_client_secret = "g-client-secret"
 
         token_response = _mock_response(200, {"access_token": "google-access-token"})
-        user_response = _mock_response(200, {
-            "id": "google-user-123",
-            "email": "user@gmail.com",
-            "name": "Test User",
-            "picture": "https://example.com/photo.jpg",
-        })
+        user_response = _mock_response(
+            200,
+            {
+                "id": "google-user-123",
+                "email": "user@gmail.com",
+                "name": "Test User",
+                "picture": "https://example.com/photo.jpg",
+            },
+        )
 
         mock_client_instance = AsyncMock()
         mock_client_instance.post.return_value = token_response
@@ -201,12 +203,15 @@ class TestGetOAuthUserInfoFacebook:
         mock_settings.facebook_client_secret = "fb-client-secret"
 
         token_response = _mock_response(200, {"access_token": "fb-access-token"})
-        user_response = _mock_response(200, {
-            "id": "fb-user-789",
-            "email": "user@facebook.com",
-            "name": "Facebook User",
-            "picture": {"data": {"url": "https://example.com/fb-photo.jpg"}},
-        })
+        user_response = _mock_response(
+            200,
+            {
+                "id": "fb-user-789",
+                "email": "user@facebook.com",
+                "name": "Facebook User",
+                "picture": {"data": {"url": "https://example.com/fb-photo.jpg"}},
+            },
+        )
 
         mock_client_instance = AsyncMock()
         # Facebook uses GET for both token and user info

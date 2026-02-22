@@ -54,9 +54,7 @@ SAMPLE_IMAGE_RESULT = {
 }
 
 
-def _make_subprocess_mock(
-    stdout: str, returncode: int = 0, stderr: str = ""
-) -> AsyncMock:
+def _make_subprocess_mock(stdout: str, returncode: int = 0, stderr: str = "") -> AsyncMock:
     """Create a mock subprocess that returns the given stdout/stderr."""
     proc_mock = AsyncMock()
     proc_mock.communicate.return_value = (stdout.encode(), stderr.encode())
@@ -127,9 +125,7 @@ class TestExtractJson:
         assert isinstance(result, list)
         assert len(result) == 1
 
-    def test_extract_json_prefers_array_over_object(
-        self, claude_service: Any
-    ) -> None:
+    def test_extract_json_prefers_array_over_object(self, claude_service: Any) -> None:
         """_extract_json should find [ before { when both exist."""
         text = 'prefix [{"a": 1}] suffix'
         result = claude_service._extract_json(text)
@@ -144,9 +140,7 @@ class TestExtractJson:
 @pytest.mark.asyncio
 class TestRunClaude:
     @patch("asyncio.create_subprocess_exec")
-    async def test_run_claude_success(
-        self, mock_exec: AsyncMock, claude_service: Any
-    ) -> None:
+    async def test_run_claude_success(self, mock_exec: AsyncMock, claude_service: Any) -> None:
         """_run_claude should return stripped stdout on success."""
         mock_exec.return_value = _make_subprocess_mock("  output text  ")
         result = await claude_service._run_claude("test prompt")
@@ -168,9 +162,7 @@ class TestRunClaude:
         self, mock_exec: AsyncMock, claude_service: Any
     ) -> None:
         """_run_claude should raise RuntimeError when the process fails."""
-        mock_exec.return_value = _make_subprocess_mock(
-            "", returncode=1, stderr="CLI error"
-        )
+        mock_exec.return_value = _make_subprocess_mock("", returncode=1, stderr="CLI error")
         with pytest.raises(RuntimeError, match="Claude local CLI failed"):
             await claude_service._run_claude("test prompt")
 
@@ -182,13 +174,9 @@ class TestRunClaude:
 
 @pytest.mark.asyncio
 class TestClaudeLocalGenerateRecipes:
-    async def test_generate_recipes_returns_list(
-        self, claude_service: Any
-    ) -> None:
+    async def test_generate_recipes_returns_list(self, claude_service: Any) -> None:
         """generate_recipes should return a list of recipe dicts."""
-        with patch.object(
-            claude_service, "_run_claude", return_value=json.dumps([SAMPLE_RECIPE])
-        ):
+        with patch.object(claude_service, "_run_claude", return_value=json.dumps([SAMPLE_RECIPE])):
             result = await claude_service.generate_recipes(
                 prompt="pasta recipe",
                 available_ingredients=["pasta", "tomatoes"],
@@ -204,9 +192,7 @@ class TestClaudeLocalGenerateRecipes:
         assert len(result) == 1
         assert result[0]["title"] == "Garlic Tomato Pasta"
 
-    async def test_generate_recipes_handles_wrapped_json(
-        self, claude_service: Any
-    ) -> None:
+    async def test_generate_recipes_handles_wrapped_json(self, claude_service: Any) -> None:
         """generate_recipes should unwrap {recipes: [...]} envelope."""
         with patch.object(
             claude_service,
@@ -228,9 +214,7 @@ class TestClaudeLocalGenerateRecipes:
         assert len(result) == 1
         assert result[0]["title"] == "Garlic Tomato Pasta"
 
-    async def test_generate_recipes_with_surrounding_text(
-        self, claude_service: Any
-    ) -> None:
+    async def test_generate_recipes_with_surrounding_text(self, claude_service: Any) -> None:
         """generate_recipes should extract JSON even with surrounding text."""
         raw = f"Here are the recipes:\n{json.dumps([SAMPLE_RECIPE])}\nEnjoy!"
         with patch.object(claude_service, "_run_claude", return_value=raw):
@@ -248,9 +232,7 @@ class TestClaudeLocalGenerateRecipes:
         assert isinstance(result, list)
         assert len(result) == 1
 
-    async def test_generate_recipes_empty_list(
-        self, claude_service: Any
-    ) -> None:
+    async def test_generate_recipes_empty_list(self, claude_service: Any) -> None:
         """generate_recipes should handle an empty list response."""
         with patch.object(claude_service, "_run_claude", return_value="[]"):
             result = await claude_service.generate_recipes(
@@ -275,9 +257,7 @@ class TestClaudeLocalGenerateRecipes:
 
 @pytest.mark.asyncio
 class TestClaudeLocalSubstitutions:
-    async def test_suggest_substitutions_returns_list(
-        self, claude_service: Any
-    ) -> None:
+    async def test_suggest_substitutions_returns_list(self, claude_service: Any) -> None:
         """suggest_substitutions should return a list of substitution dicts."""
         with patch.object(
             claude_service,
@@ -293,9 +273,7 @@ class TestClaudeLocalSubstitutions:
         assert len(result) == 1
         assert result[0]["substitute"] == "coconut oil"
 
-    async def test_suggest_substitutions_handles_wrapped_json(
-        self, claude_service: Any
-    ) -> None:
+    async def test_suggest_substitutions_handles_wrapped_json(self, claude_service: Any) -> None:
         """suggest_substitutions should unwrap {substitutions: [...]} envelope."""
         with patch.object(
             claude_service,
@@ -318,9 +296,7 @@ class TestClaudeLocalSubstitutions:
 
 @pytest.mark.asyncio
 class TestClaudeLocalVoiceParsing:
-    async def test_parse_voice_input_returns_dict(
-        self, claude_service: Any
-    ) -> None:
+    async def test_parse_voice_input_returns_dict(self, claude_service: Any) -> None:
         """parse_voice_input should return a parsed ingredient dict."""
         with (
             patch.object(
@@ -348,9 +324,7 @@ class TestClaudeLocalVoiceParsing:
 
 @pytest.mark.asyncio
 class TestClaudeLocalImageIdentification:
-    async def test_identify_ingredients_from_image_returns_dict(
-        self, claude_service: Any
-    ) -> None:
+    async def test_identify_ingredients_from_image_returns_dict(self, claude_service: Any) -> None:
         """identify_ingredients_from_image should return a dict of ingredients."""
         with (
             patch.object(

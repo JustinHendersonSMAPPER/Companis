@@ -8,14 +8,13 @@ various failure modes.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import httpx
 import pytest
 
 from app.services.barcode import _fetch_openfoodfacts, lookup_barcode
-
 
 # ---------------------------------------------------------------------------
 # _fetch_openfoodfacts tests
@@ -142,7 +141,7 @@ def _make_mock_ingredient(
     ingredient.nutrition_info = nutrition_info
     ingredient.common_allergens = common_allergens
     ingredient.description = description
-    ingredient.created_at = datetime(2024, 1, 1, tzinfo=timezone.utc)
+    ingredient.created_at = datetime(2024, 1, 1, tzinfo=UTC)
     return ingredient
 
 

@@ -6,16 +6,12 @@ from httpx import AsyncClient
 
 @pytest.mark.asyncio
 class TestShoppingCart:
-    async def test_get_empty_carts(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_get_empty_carts(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         response = await client.get("/api/shopping/", headers=auth_headers)
         assert response.status_code == 200
         assert response.json() == []
 
-    async def test_create_cart(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_create_cart(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         response = await client.post(
             "/api/shopping/",
             json={"name": "Weekly Groceries"},
@@ -38,9 +34,7 @@ class TestShoppingCart:
         assert response.status_code == 201
         assert response.json()["name"] == "My Shopping List"
 
-    async def test_list_carts(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_list_carts(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         await client.post(
             "/api/shopping/",
             json={"name": "Cart One"},
@@ -57,9 +51,7 @@ class TestShoppingCart:
 
 @pytest.mark.asyncio
 class TestShoppingCartItems:
-    async def _create_cart(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> str:
+    async def _create_cart(self, client: AsyncClient, auth_headers: dict[str, str]) -> str:
         resp = await client.post(
             "/api/shopping/",
             json={"name": "Test Cart"},

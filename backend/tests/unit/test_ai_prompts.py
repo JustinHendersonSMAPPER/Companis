@@ -15,7 +15,9 @@ class ConcreteAIService(AIService):
         return {}
 
     async def suggest_substitutions(
-        self, original_ingredient: str, dietary_restrictions: list[str],
+        self,
+        original_ingredient: str,
+        dietary_restrictions: list[str],
         available_ingredients: list[str],
     ) -> list[dict[str, str]]:
         return []
@@ -209,16 +211,12 @@ class TestBuildSubstitutionPrompt:
         assert "substitute" in prompt
 
     def test_substitution_prompt_with_restrictions(self) -> None:
-        prompt = self.service._build_substitution_prompt(
-            "butter", ["dairy-free", "vegan"], []
-        )
+        prompt = self.service._build_substitution_prompt("butter", ["dairy-free", "vegan"], [])
         assert "dairy-free" in prompt
         assert "vegan" in prompt
 
     def test_substitution_prompt_with_available(self) -> None:
-        prompt = self.service._build_substitution_prompt(
-            "butter", [], ["coconut oil", "margarine"]
-        )
+        prompt = self.service._build_substitution_prompt("butter", [], ["coconut oil", "margarine"])
         assert "coconut oil" in prompt
         assert "margarine" in prompt
 

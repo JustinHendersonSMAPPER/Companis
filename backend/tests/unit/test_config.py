@@ -145,9 +145,7 @@ class TestSecretsOverrides:
 class TestFindSecretsDir:
     """Test the _find_secrets_dir helper function."""
 
-    def test_returns_none_when_no_secrets_dir_exists(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_returns_none_when_no_secrets_dir_exists(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr("app.config._SECRETS_DIRS", [Path("/nonexistent/abc123")])
         assert _find_secrets_dir() is None
 
@@ -161,9 +159,7 @@ class TestFindSecretsDir:
 class TestSettingsCustomiseSources:
     """Test that the priority chain works end-to-end."""
 
-    def test_full_priority_chain(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_full_priority_chain(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """CLI > secrets > env > defaults."""
         # Default is "ollama"
         # Env sets to "anthropic"
@@ -178,6 +174,21 @@ class TestSettingsCustomiseSources:
             _cli_parse_args=["--ai-provider=anthropic"],
         )
         assert s.ai_provider == AIProvider.ANTHROPIC
+
+    def test_auto_discovery_uses_found_secrets_dir(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """When no _secrets_dir is passed, auto-discovery should pick up _find_secrets_dir."""
+        secret_file = tmp_path / "ai_provider"
+        secret_file.write_text("openai")
+        # Make _find_secrets_dir return tmp_path (simulating /run/secrets exists)
+        monkeypatch.setattr("app.config._SECRETS_DIRS", [tmp_path])
+        # Do NOT pass _secrets_dir — force auto-discovery path
+        s = Settings(
+            _env_file=None,  # type: ignore[call-arg]
+            _cli_parse_args=[],
+        )
+        assert s.ai_provider == AIProvider.OPENAI
 
     def test_existing_fields_preserved(self) -> None:
         """Ensure all original fields still exist with correct defaults."""

@@ -85,9 +85,7 @@ class TestSubstitutionRequest:
 
 class TestSubstitutionResponse:
     def test_full_response(self) -> None:
-        resp = SubstitutionResponse(
-            substitute="coconut oil", notes="Good for baking", ratio="1:1"
-        )
+        resp = SubstitutionResponse(substitute="coconut oil", notes="Good for baking", ratio="1:1")
         assert resp.substitute == "coconut oil"
         assert resp.notes == "Good for baking"
         assert resp.ratio == "1:1"

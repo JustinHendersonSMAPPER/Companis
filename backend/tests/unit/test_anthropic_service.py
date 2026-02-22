@@ -13,7 +13,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-
 SAMPLE_RECIPE = {
     "title": "Garlic Tomato Pasta",
     "description": "A simple pasta dish with fresh tomatoes and garlic.",
@@ -27,8 +26,20 @@ SAMPLE_RECIPE = {
     "dietary_tags": "vegetarian",
     "calorie_estimate": 450,
     "ingredients": [
-        {"name": "pasta", "quantity": "200", "unit": "g", "is_optional": False, "substitution_notes": ""},
-        {"name": "tomatoes", "quantity": "3", "unit": "whole", "is_optional": False, "substitution_notes": ""},
+        {
+            "name": "pasta",
+            "quantity": "200",
+            "unit": "g",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
+        {
+            "name": "tomatoes",
+            "quantity": "3",
+            "unit": "whole",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
     ],
 }
 
@@ -268,9 +279,7 @@ class TestAnthropicVoiceParsing:
         mock_anthropic_client.messages.create.return_value = _make_anthropic_response(
             json.dumps(SAMPLE_VOICE_PARSE)
         )
-        result = await anthropic_service.parse_voice_input(
-            "two cups of flour and three eggs"
-        )
+        result = await anthropic_service.parse_voice_input("two cups of flour and three eggs")
         assert isinstance(result, dict)
         assert "ingredients" in result
         assert len(result["ingredients"]) == 2

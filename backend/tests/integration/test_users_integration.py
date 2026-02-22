@@ -6,9 +6,7 @@ from httpx import AsyncClient
 
 @pytest.mark.asyncio
 class TestUserProfile:
-    async def test_get_profile(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_get_profile(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         response = await client.get("/api/users/me", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
@@ -54,9 +52,7 @@ class TestDietaryPreferences:
     async def test_get_empty_preferences(
         self, client: AsyncClient, auth_headers: dict[str, str]
     ) -> None:
-        response = await client.get(
-            "/api/users/me/dietary-preferences", headers=auth_headers
-        )
+        response = await client.get("/api/users/me/dietary-preferences", headers=auth_headers)
         assert response.status_code == 200
         assert response.json() == []
 
@@ -88,9 +84,7 @@ class TestDietaryPreferences:
             json={"preference_type": "restriction", "value": "gluten-free"},
             headers=auth_headers,
         )
-        response = await client.get(
-            "/api/users/me/dietary-preferences", headers=auth_headers
-        )
+        response = await client.get("/api/users/me/dietary-preferences", headers=auth_headers)
         assert len(response.json()) == 2
 
     async def test_delete_dietary_preference(
@@ -107,9 +101,7 @@ class TestDietaryPreferences:
         )
         assert delete_resp.status_code == 204
 
-        get_resp = await client.get(
-            "/api/users/me/dietary-preferences", headers=auth_headers
-        )
+        get_resp = await client.get("/api/users/me/dietary-preferences", headers=auth_headers)
         assert len(get_resp.json()) == 0
 
     async def test_delete_nonexistent_preference(
@@ -141,16 +133,12 @@ class TestDietaryPreferences:
 
 @pytest.mark.asyncio
 class TestHealthGoals:
-    async def test_get_empty_goals(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_get_empty_goals(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         response = await client.get("/api/users/me/health-goals", headers=auth_headers)
         assert response.status_code == 200
         assert response.json() == []
 
-    async def test_add_health_goal(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_add_health_goal(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         response = await client.post(
             "/api/users/me/health-goals",
             json={

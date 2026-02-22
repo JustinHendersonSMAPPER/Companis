@@ -6,9 +6,7 @@ from httpx import AsyncClient
 
 @pytest.mark.asyncio
 class TestHousehold:
-    async def test_get_household(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_get_household(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         response = await client.get("/api/household/", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()
@@ -34,9 +32,7 @@ class TestFamilyMembers:
     async def test_get_members_includes_owner(
         self, client: AsyncClient, auth_headers: dict[str, str]
     ) -> None:
-        response = await client.get(
-            "/api/household/members", headers=auth_headers
-        )
+        response = await client.get("/api/household/members", headers=auth_headers)
         assert response.status_code == 200
         members = response.json()
         assert len(members) >= 1
@@ -144,9 +140,7 @@ class TestFamilyMembers:
             json={"name": "Member B", "dietary_notes": "Vegan"},
             headers=auth_headers,
         )
-        response = await client.get(
-            "/api/household/members", headers=auth_headers
-        )
+        response = await client.get("/api/household/members", headers=auth_headers)
         members = response.json()
         # Owner + 2 added members
         assert len(members) >= 3

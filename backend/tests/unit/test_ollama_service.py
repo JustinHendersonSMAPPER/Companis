@@ -38,15 +38,43 @@ SAMPLE_RECIPE = {
     "dietary_tags": "vegetarian",
     "calorie_estimate": 450,
     "ingredients": [
-        {"name": "pasta", "quantity": "200", "unit": "g", "is_optional": False, "substitution_notes": ""},
-        {"name": "tomatoes", "quantity": "3", "unit": "whole", "is_optional": False, "substitution_notes": ""},
-        {"name": "garlic", "quantity": "2", "unit": "cloves", "is_optional": False, "substitution_notes": ""},
-        {"name": "olive oil", "quantity": "2", "unit": "tbsp", "is_optional": False, "substitution_notes": ""},
+        {
+            "name": "pasta",
+            "quantity": "200",
+            "unit": "g",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
+        {
+            "name": "tomatoes",
+            "quantity": "3",
+            "unit": "whole",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
+        {
+            "name": "garlic",
+            "quantity": "2",
+            "unit": "cloves",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
+        {
+            "name": "olive oil",
+            "quantity": "2",
+            "unit": "tbsp",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
     ],
 }
 
 SAMPLE_SUBSTITUTIONS = [
-    {"substitute": "coconut oil", "notes": "Good for baking, adds slight coconut flavor", "ratio": "1:1"},
+    {
+        "substitute": "coconut oil",
+        "notes": "Good for baking, adds slight coconut flavor",
+        "ratio": "1:1",
+    },
     {"substitute": "margarine", "notes": "Direct replacement in most recipes", "ratio": "1:1"},
 ]
 
@@ -86,9 +114,7 @@ class TestOllamaRecipeGeneration:
         self, ollama_service: Any, mock_ollama_client: AsyncMock
     ) -> None:
         """generate_recipes should return a list of recipe dicts."""
-        mock_ollama_client.chat.return_value = _make_chat_response(
-            json.dumps([SAMPLE_RECIPE])
-        )
+        mock_ollama_client.chat.return_value = _make_chat_response(json.dumps([SAMPLE_RECIPE]))
         result = await ollama_service.generate_recipes(
             prompt="simple pasta recipe",
             available_ingredients=["pasta", "tomatoes", "garlic", "olive oil"],
@@ -196,9 +222,7 @@ class TestOllamaSubstitutions:
         self, ollama_service: Any, mock_ollama_client: AsyncMock
     ) -> None:
         """suggest_substitutions should return a list of substitution dicts."""
-        mock_ollama_client.chat.return_value = _make_chat_response(
-            json.dumps(SAMPLE_SUBSTITUTIONS)
-        )
+        mock_ollama_client.chat.return_value = _make_chat_response(json.dumps(SAMPLE_SUBSTITUTIONS))
         result = await ollama_service.suggest_substitutions(
             original_ingredient="butter",
             dietary_restrictions=["dairy-free"],
@@ -245,12 +269,8 @@ class TestOllamaVoiceParsing:
         self, ollama_service: Any, mock_ollama_client: AsyncMock
     ) -> None:
         """parse_voice_input should return a parsed ingredient dict."""
-        mock_ollama_client.chat.return_value = _make_chat_response(
-            json.dumps(SAMPLE_VOICE_PARSE)
-        )
-        result = await ollama_service.parse_voice_input(
-            "two cups of flour and three eggs"
-        )
+        mock_ollama_client.chat.return_value = _make_chat_response(json.dumps(SAMPLE_VOICE_PARSE))
+        result = await ollama_service.parse_voice_input("two cups of flour and three eggs")
         assert isinstance(result, dict)
         assert "ingredients" in result
         assert len(result["ingredients"]) == 2
@@ -267,12 +287,9 @@ class TestOllamaVoiceParsing:
                 {"name": "soy sauce", "quantity": 0.25, "unit": "cup"},
             ]
         }
-        mock_ollama_client.chat.return_value = _make_chat_response(
-            json.dumps(complex_response)
-        )
+        mock_ollama_client.chat.return_value = _make_chat_response(json.dumps(complex_response))
         result = await ollama_service.parse_voice_input(
-            "I have half a pound of chicken breast, one onion, "
-            "and about a quarter cup of soy sauce"
+            "I have half a pound of chicken breast, one onion, and about a quarter cup of soy sauce"
         )
         assert isinstance(result, dict)
         assert len(result["ingredients"]) == 3
@@ -286,9 +303,7 @@ class TestOllamaResponseParsing:
         self, ollama_service: Any, mock_ollama_client: AsyncMock
     ) -> None:
         """Recipes returned should preserve all expected fields."""
-        mock_ollama_client.chat.return_value = _make_chat_response(
-            json.dumps([SAMPLE_RECIPE])
-        )
+        mock_ollama_client.chat.return_value = _make_chat_response(json.dumps([SAMPLE_RECIPE]))
         result = await ollama_service.generate_recipes(
             prompt="make me a quick soup",
             available_ingredients=["chicken broth", "noodles", "carrots"],

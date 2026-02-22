@@ -72,9 +72,7 @@ class TestDetectIngredientsFromImage:
         assert result.confidence_scores == {"rice": 0.8, "beans": 0.8}
 
     @patch("app.services.ingredient.get_ai_service")
-    async def test_with_empty_ingredients_list(
-        self, mock_get_ai_service: MagicMock
-    ) -> None:
+    async def test_with_empty_ingredients_list(self, mock_get_ai_service: MagicMock) -> None:
         mock_ai = AsyncMock()
         mock_ai.identify_ingredients_from_image.return_value = {
             "ingredients": [],
@@ -89,9 +87,7 @@ class TestDetectIngredientsFromImage:
         assert result.confidence_scores == {}
 
     @patch("app.services.ingredient.get_ai_service")
-    async def test_get_ai_service_is_called(
-        self, mock_get_ai_service: MagicMock
-    ) -> None:
+    async def test_get_ai_service_is_called(self, mock_get_ai_service: MagicMock) -> None:
         """Verify that get_ai_service is called and its return value is used."""
         mock_ai = AsyncMock()
         mock_ai.identify_ingredients_from_image.return_value = {

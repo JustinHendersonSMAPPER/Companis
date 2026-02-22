@@ -6,9 +6,7 @@ from httpx import AsyncClient
 
 @pytest.mark.asyncio
 class TestAIProviders:
-    async def test_get_providers(
-        self, client: AsyncClient, auth_headers: dict[str, str]
-    ) -> None:
+    async def test_get_providers(self, client: AsyncClient, auth_headers: dict[str, str]) -> None:
         response = await client.get("/api/ai/providers", headers=auth_headers)
         assert response.status_code == 200
         data = response.json()

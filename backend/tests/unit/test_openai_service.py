@@ -13,7 +13,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-
 SAMPLE_RECIPE = {
     "title": "Garlic Tomato Pasta",
     "description": "A simple pasta dish with fresh tomatoes and garlic.",
@@ -27,8 +26,20 @@ SAMPLE_RECIPE = {
     "dietary_tags": "vegetarian",
     "calorie_estimate": 450,
     "ingredients": [
-        {"name": "pasta", "quantity": "200", "unit": "g", "is_optional": False, "substitution_notes": ""},
-        {"name": "tomatoes", "quantity": "3", "unit": "whole", "is_optional": False, "substitution_notes": ""},
+        {
+            "name": "pasta",
+            "quantity": "200",
+            "unit": "g",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
+        {
+            "name": "tomatoes",
+            "quantity": "3",
+            "unit": "whole",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
     ],
 }
 
@@ -132,9 +143,7 @@ class TestOpenAIRecipeGeneration:
         self, openai_service: Any, mock_openai_client: AsyncMock
     ) -> None:
         """generate_recipes should treat None content as empty list."""
-        mock_openai_client.chat.completions.create.return_value = _make_openai_response(
-            None
-        )
+        mock_openai_client.chat.completions.create.return_value = _make_openai_response(None)
         result = await openai_service.generate_recipes(
             prompt="test",
             available_ingredients=[],
@@ -223,9 +232,7 @@ class TestOpenAIImageIdentification:
         self, openai_service: Any, mock_openai_client: AsyncMock
     ) -> None:
         """identify_ingredients_from_image should return {} when content is None."""
-        mock_openai_client.chat.completions.create.return_value = _make_openai_response(
-            None
-        )
+        mock_openai_client.chat.completions.create.return_value = _make_openai_response(None)
         result = await openai_service.identify_ingredients_from_image("base64data==")
         assert isinstance(result, dict)
         assert len(result) == 0
@@ -283,9 +290,7 @@ class TestOpenAISubstitutions:
         self, openai_service: Any, mock_openai_client: AsyncMock
     ) -> None:
         """suggest_substitutions should treat None content as empty list."""
-        mock_openai_client.chat.completions.create.return_value = _make_openai_response(
-            None
-        )
+        mock_openai_client.chat.completions.create.return_value = _make_openai_response(None)
         result = await openai_service.suggest_substitutions(
             original_ingredient="butter",
             dietary_restrictions=[],
@@ -304,9 +309,7 @@ class TestOpenAIVoiceParsing:
         mock_openai_client.chat.completions.create.return_value = _make_openai_response(
             json.dumps(SAMPLE_VOICE_PARSE)
         )
-        result = await openai_service.parse_voice_input(
-            "two cups of flour and three eggs"
-        )
+        result = await openai_service.parse_voice_input("two cups of flour and three eggs")
         assert isinstance(result, dict)
         assert "ingredients" in result
         assert len(result["ingredients"]) == 2
@@ -316,9 +319,7 @@ class TestOpenAIVoiceParsing:
         self, openai_service: Any, mock_openai_client: AsyncMock
     ) -> None:
         """parse_voice_input should return {} when content is None."""
-        mock_openai_client.chat.completions.create.return_value = _make_openai_response(
-            None
-        )
+        mock_openai_client.chat.completions.create.return_value = _make_openai_response(None)
         result = await openai_service.parse_voice_input("some text")
         assert isinstance(result, dict)
         assert len(result) == 0

@@ -8,14 +8,13 @@ structured RecipeSearchResponse.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 from app.schemas.recipe import RecipeSearchResponse, SubstitutionSuggestion
 from app.services.recipe import search_recipes_with_ai
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -35,9 +34,27 @@ SAMPLE_RAW_RECIPE: dict = {
     "dietary_tags": "none",
     "calorie_estimate": 400,
     "ingredients": [
-        {"name": "pasta", "quantity": 200, "unit": "g", "is_optional": False, "substitution_notes": ""},
-        {"name": "truffle oil", "quantity": 1, "unit": "tbsp", "is_optional": False, "substitution_notes": "use olive oil instead"},
-        {"name": "parsley", "quantity": 1, "unit": "tbsp", "is_optional": True, "substitution_notes": ""},
+        {
+            "name": "pasta",
+            "quantity": 200,
+            "unit": "g",
+            "is_optional": False,
+            "substitution_notes": "",
+        },
+        {
+            "name": "truffle oil",
+            "quantity": 1,
+            "unit": "tbsp",
+            "is_optional": False,
+            "substitution_notes": "use olive oil instead",
+        },
+        {
+            "name": "parsley",
+            "quantity": 1,
+            "unit": "tbsp",
+            "is_optional": True,
+            "substitution_notes": "",
+        },
     ],
 }
 
@@ -74,7 +91,7 @@ def _make_recipe_mock(
     recipe.source = source
     recipe.dietary_tags = dietary_tags
     recipe.calorie_estimate = calorie_estimate
-    recipe.created_at = datetime(2024, 6, 15, 12, 0, 0, tzinfo=timezone.utc)
+    recipe.created_at = datetime(2024, 6, 15, 12, 0, 0, tzinfo=UTC)
     return recipe
 
 
@@ -87,8 +104,14 @@ def _make_recipe_mock(
 class TestSearchRecipesWithAI:
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta", "tomatoes"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta", "tomatoes"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_basic_flow_returns_recipe_search_response(
@@ -113,8 +136,20 @@ class TestSearchRecipesWithAI:
             "dietary_tags": "none",
             "calorie_estimate": 400,
             "ingredients": [
-                {"name": "pasta", "quantity": 200, "unit": "g", "is_optional": False, "substitution_notes": ""},
-                {"name": "tomatoes", "quantity": 2, "unit": "pcs", "is_optional": False, "substitution_notes": ""},
+                {
+                    "name": "pasta",
+                    "quantity": 200,
+                    "unit": "g",
+                    "is_optional": False,
+                    "substitution_notes": "",
+                },
+                {
+                    "name": "tomatoes",
+                    "quantity": 2,
+                    "unit": "pcs",
+                    "is_optional": False,
+                    "substitution_notes": "",
+                },
             ],
         }
         mock_ai = AsyncMock()
@@ -148,8 +183,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_missing_ingredients_identified_correctly(
@@ -175,8 +216,20 @@ class TestSearchRecipesWithAI:
             "dietary_tags": "none",
             "calorie_estimate": 400,
             "ingredients": [
-                {"name": "pasta", "quantity": 200, "unit": "g", "is_optional": False, "substitution_notes": ""},
-                {"name": "saffron", "quantity": 1, "unit": "pinch", "is_optional": False, "substitution_notes": ""},
+                {
+                    "name": "pasta",
+                    "quantity": 200,
+                    "unit": "g",
+                    "is_optional": False,
+                    "substitution_notes": "",
+                },
+                {
+                    "name": "saffron",
+                    "quantity": 1,
+                    "unit": "pinch",
+                    "is_optional": False,
+                    "substitution_notes": "",
+                },
             ],
         }
         mock_ai = AsyncMock()
@@ -203,8 +256,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_substitutions_captured_when_notes_present(
@@ -245,8 +304,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta", "tomato", "garlic"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta", "tomato", "garlic"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_prefer_available_passes_ingredients_to_ai(
@@ -280,8 +345,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta", "tomato"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta", "tomato"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_prefer_available_false_passes_empty_list(
@@ -315,8 +386,16 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=["vegetarian"])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=[])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences",
+        new_callable=AsyncMock,
+        return_value=["vegetarian"],
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=[],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_dietary_filter_combined_with_user_preferences(
@@ -353,8 +432,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=[])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=[],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_empty_recipe_results(
@@ -391,8 +476,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_recipe_response_fields_populated_from_saved_recipe(
@@ -417,7 +508,13 @@ class TestSearchRecipesWithAI:
             "dietary_tags": "vegetarian",
             "calorie_estimate": 550,
             "ingredients": [
-                {"name": "pasta", "quantity": 300, "unit": "g", "is_optional": False, "substitution_notes": ""},
+                {
+                    "name": "pasta",
+                    "quantity": 300,
+                    "unit": "g",
+                    "is_optional": False,
+                    "substitution_notes": "",
+                },
             ],
         }
         mock_ai = AsyncMock()
@@ -465,8 +562,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_optional_ingredient_not_marked_missing(
@@ -492,8 +595,20 @@ class TestSearchRecipesWithAI:
             "dietary_tags": "none",
             "calorie_estimate": 300,
             "ingredients": [
-                {"name": "pasta", "quantity": 200, "unit": "g", "is_optional": False, "substitution_notes": ""},
-                {"name": "parmesan", "quantity": 50, "unit": "g", "is_optional": True, "substitution_notes": ""},
+                {
+                    "name": "pasta",
+                    "quantity": 200,
+                    "unit": "g",
+                    "is_optional": False,
+                    "substitution_notes": "",
+                },
+                {
+                    "name": "parmesan",
+                    "quantity": 50,
+                    "unit": "g",
+                    "is_optional": True,
+                    "substitution_notes": "",
+                },
             ],
         }
         mock_ai = AsyncMock()
@@ -516,10 +631,26 @@ class TestSearchRecipesWithAI:
 
         assert "recipe-opt" not in result.missing_ingredients
 
-    @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=["kid allergic to shellfish"])
-    @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=["high-protein"])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=["halal"])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["chicken", "rice"])
+    @patch(
+        "app.services.recipe._get_family_dietary_notes",
+        new_callable=AsyncMock,
+        return_value=["kid allergic to shellfish"],
+    )
+    @patch(
+        "app.services.recipe._get_user_health_goals",
+        new_callable=AsyncMock,
+        return_value=["high-protein"],
+    )
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences",
+        new_callable=AsyncMock,
+        return_value=["halal"],
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["chicken", "rice"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_ai_called_with_correct_parameters(
@@ -563,8 +694,14 @@ class TestSearchRecipesWithAI:
 
     @patch("app.services.recipe._get_family_dietary_notes", new_callable=AsyncMock, return_value=[])
     @patch("app.services.recipe._get_user_health_goals", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[])
-    @patch("app.services.recipe._get_household_ingredient_names", new_callable=AsyncMock, return_value=["pasta"])
+    @patch(
+        "app.services.recipe._get_user_dietary_preferences", new_callable=AsyncMock, return_value=[]
+    )
+    @patch(
+        "app.services.recipe._get_household_ingredient_names",
+        new_callable=AsyncMock,
+        return_value=["pasta"],
+    )
     @patch("app.services.recipe._save_recipe", new_callable=AsyncMock)
     @patch("app.services.recipe.get_ai_service")
     async def test_ingredient_availability_flag_set_correctly(

@@ -73,9 +73,7 @@ class TestHouseholdIngredients:
     async def test_get_empty_household_ingredients(
         self, client: AsyncClient, auth_headers: dict[str, str]
     ) -> None:
-        response = await client.get(
-            "/api/ingredients/household", headers=auth_headers
-        )
+        response = await client.get("/api/ingredients/household", headers=auth_headers)
         assert response.status_code == 200
         assert response.json() == []
 
@@ -112,9 +110,7 @@ class TestHouseholdIngredients:
             json={"name": "Eggs", "quantity": 12.0, "unit": "count"},
             headers=auth_headers,
         )
-        response = await client.get(
-            "/api/ingredients/household", headers=auth_headers
-        )
+        response = await client.get("/api/ingredients/household", headers=auth_headers)
         assert len(response.json()) == 2
 
     async def test_update_household_ingredient(
@@ -149,9 +145,7 @@ class TestHouseholdIngredients:
         )
         assert delete_resp.status_code == 204
 
-        get_resp = await client.get(
-            "/api/ingredients/household", headers=auth_headers
-        )
+        get_resp = await client.get("/api/ingredients/household", headers=auth_headers)
         assert len(get_resp.json()) == 0
 
     async def test_delete_nonexistent_household_ingredient(
@@ -184,9 +178,7 @@ class TestHouseholdIngredients:
             json={"name": "Garlic", "quantity": 3.0, "unit": "cloves"},
             headers=auth_headers,
         )
-        response = await client.get(
-            "/api/ingredients/household", headers=second_user_headers
-        )
+        response = await client.get("/api/ingredients/household", headers=second_user_headers)
         assert len(response.json()) == 0
 
     async def test_add_ingredient_requires_name_or_id(

@@ -98,9 +98,7 @@ class TestRecipeSearchRequest:
             RecipeSearchRequest(prompt="food", max_results=25)
 
     def test_dietary_filter_list(self) -> None:
-        search = RecipeSearchRequest(
-            prompt="dinner", dietary_filter=["vegan", "gluten-free"]
-        )
+        search = RecipeSearchRequest(prompt="dinner", dietary_filter=["vegan", "gluten-free"])
         assert len(search.dietary_filter) == 2
 
 
