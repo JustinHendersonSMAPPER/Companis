@@ -54,5 +54,8 @@ frontend/playwright-report/
 frontend/test-results/
 frontend/playwright.config.js
 
+# Worktrees
+.worktrees/
+
 # Misc
 *.log
