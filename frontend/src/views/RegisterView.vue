@@ -48,7 +48,7 @@ async function handleRegister(): Promise<void> {
   <div class="auth-container">
     <div class="auth-card card">
       <h1 class="auth-title">Create Account</h1>
-      <p class="auth-subtitle">Join SousChefAI and start cooking smarter</p>
+      <p class="auth-subtitle">Pull up a chair.</p>
 
       <form class="auth-form" @submit.prevent="handleRegister">
         <div class="form-group">

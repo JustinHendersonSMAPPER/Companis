@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     )
 
     # Application
-    app_name: str = "SousChefAI"
+    app_name: str = "Companis"
     debug: bool = False
     secret_key: str = "change-me-in-production"
     allowed_origins: list[str] = ["http://localhost:6001"]
@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     port: int = 6000
 
     # Database
-    database_url: str = "sqlite+aiosqlite:///./souschefai.db"
+    database_url: str = "sqlite+aiosqlite:///./companis.db"
 
     # JWT
     jwt_algorithm: str = "HS256"

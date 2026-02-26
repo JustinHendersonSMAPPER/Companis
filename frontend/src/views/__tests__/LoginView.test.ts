@@ -52,7 +52,7 @@ describe('LoginView', () => {
 
   it('renders login form with email and password fields', () => {
     const wrapper = mountView()
-    expect(wrapper.find('h1').text()).toBe('SousChefAI')
+    expect(wrapper.find('h1').text()).toBe('Companis')
     expect(wrapper.find('#email').exists()).toBe(true)
     expect(wrapper.find('#password').exists()).toBe(true)
     expect(wrapper.find('button[type="submit"]').text()).toBe('Sign In')
@@ -157,7 +157,7 @@ describe('LoginView', () => {
 
   it('renders subtitle text', () => {
     const wrapper = mountView()
-    expect(wrapper.find('.auth-subtitle').text()).toBe('Your AI-powered kitchen assistant')
+    expect(wrapper.find('.auth-subtitle').text()).toBe('Pull up a chair.')
   })
 
   it('renders divider with "or continue with" text', () => {

@@ -1,6 +1,6 @@
-# SousChefAI
+# Companis
 
-AI-powered recipe assistant that manages pantry inventory and generates personalized recipes. Monorepo with a Python backend and Vue frontend.
+Personalized eating lifestyle app that builds a comprehensive profile of who you are as an eater and uses AI to recommend recipes tailored to how you want to eat. Monorepo with a Python backend and Vue frontend.
 
 ## Monorepo Structure
 
@@ -70,7 +70,7 @@ Default: `ollama` with `llama3.2` model.
 
 ## Database
 
-SQLite with async SQLAlchemy (`aiosqlite`). File: `backend/souschefai.db`. Migrations via Alembic.
+SQLite with async SQLAlchemy (`aiosqlite`). File: `backend/companis.db`. Migrations via Alembic.
 
 ```bash
 cd backend

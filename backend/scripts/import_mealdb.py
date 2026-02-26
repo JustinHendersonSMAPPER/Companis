@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bulk-import recipes from TheMealDB into the SousChefAI database.
+"""Bulk-import recipes from TheMealDB into the Companis database.
 
 Usage:
     python scripts/import_mealdb.py              # full import

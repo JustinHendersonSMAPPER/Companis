@@ -3,20 +3,20 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 TERMS_AND_CONDITIONS = """
-SOUSCHEFAI TERMS OF SERVICE AND LIABILITY DISCLAIMER
+COMPANIS TERMS OF SERVICE AND LIABILITY DISCLAIMER
 
 Last Updated: 2026-02-21
 
-BY CREATING AN ACCOUNT AND USING SOUSCHEFAI, YOU ACKNOWLEDGE AND AGREE TO THE FOLLOWING TERMS:
+BY CREATING AN ACCOUNT AND USING COMPANIS, YOU ACKNOWLEDGE AND AGREE TO THE FOLLOWING TERMS:
 
 1. AI-GENERATED CONTENT DISCLAIMER
-SousChefAI uses artificial intelligence to generate recipe suggestions, ingredient substitutions,
+Companis uses artificial intelligence to generate recipe suggestions, ingredient substitutions,
 and nutritional information. AI-generated content may contain errors, inaccuracies, or omissions.
 The recipes and suggestions provided are for informational and entertainment purposes only and
 should NOT be considered professional dietary, medical, or nutritional advice.
 
 2. ALLERGY AND DIETARY RESTRICTION WARNING
-While SousChefAI makes every effort to respect dietary preferences and allergies entered by users,
+While Companis makes every effort to respect dietary preferences and allergies entered by users,
 AI systems are inherently imperfect and may:
 - Fail to identify all allergens in a recipe or ingredient
 - Suggest ingredients or substitutions that contain undisclosed allergens
@@ -37,13 +37,13 @@ You are solely responsible for:
 - Confirming the safety and freshness of ingredients used
 
 4. NO MEDICAL OR NUTRITIONAL ADVICE
-SousChefAI does not provide medical advice. Health goals, calorie estimates, and nutritional
+Companis does not provide medical advice. Health goals, calorie estimates, and nutritional
 information are approximate and should not replace guidance from qualified healthcare providers,
 dietitians, or nutritionists. Do not use this application to manage medical conditions without
 consulting your healthcare provider.
 
 5. LIMITATION OF LIABILITY
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, SOUSCHEFAI AND ITS DEVELOPERS, OPERATORS, AND
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, COMPANIS AND ITS DEVELOPERS, OPERATORS, AND
 AFFILIATES SHALL NOT BE LIABLE FOR:
 - Any adverse health reactions, allergic reactions, illness, or injury resulting from the
   preparation or consumption of recipes or ingredients suggested by the application
@@ -54,7 +54,7 @@ AFFILIATES SHALL NOT BE LIABLE FOR:
 - Any loss, damage, or harm of any kind arising from the use of this application
 
 6. INDEMNIFICATION
-You agree to indemnify and hold harmless SousChefAI and its operators from any claims, damages,
+You agree to indemnify and hold harmless Companis and its operators from any claims, damages,
 or expenses arising from your use of the application, including but not limited to any adverse
 health effects resulting from recipes prepared using the application's suggestions.
 
@@ -69,7 +69,7 @@ improve your experience. This data may be processed by third-party AI providers 
 by the application. We do not sell personal data to third parties.
 
 9. THIRD-PARTY INTEGRATIONS
-Shopping cart features may integrate with third-party services. SousChefAI is not responsible
+Shopping cart features may integrate with third-party services. Companis is not responsible
 for the accuracy, pricing, availability, or quality of products from third-party providers.
 
 10. CHANGES TO TERMS

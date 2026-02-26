@@ -52,7 +52,7 @@ class AIService(ABC):
         cuisine: str | None,
     ) -> str:
         parts = [
-            "You are SousChefAI, an expert cooking assistant. Generate recipe suggestions as JSON.",
+            "You are Companis, a personalized eating lifestyle assistant. Generate recipe suggestions as JSON.",
             f"\nUser request: {prompt}",
             "\nAvailable ingredients: "
             f"{', '.join(available_ingredients) if available_ingredients else 'Not specified'}",

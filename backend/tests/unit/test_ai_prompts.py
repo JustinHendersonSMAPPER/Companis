@@ -42,7 +42,7 @@ class TestBuildRecipePrompt:
             max_prep_time=None,
             cuisine=None,
         )
-        assert "SousChefAI" in prompt
+        assert "Companis" in prompt
         assert "Make me pasta" in prompt
         assert "Return exactly 3 recipes" in prompt
         assert "JSON" in prompt

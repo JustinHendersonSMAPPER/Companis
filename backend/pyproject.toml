@@ -1,7 +1,7 @@
 [project]
-name = "souschefai-backend"
+name = "companis-backend"
 version = "0.1.0"
-description = "SousChefAI - AI-powered recipe assistant backend"
+description = "Companis - personalized eating lifestyle app backend"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115.0",

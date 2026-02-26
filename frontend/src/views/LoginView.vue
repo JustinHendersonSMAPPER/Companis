@@ -26,8 +26,8 @@ function loginWithFacebook(): void {
 <template>
   <div class="auth-container">
     <div class="auth-card card">
-      <h1 class="auth-title">SousChefAI</h1>
-      <p class="auth-subtitle">Your AI-powered kitchen assistant</p>
+      <h1 class="auth-title">Companis</h1>
+      <p class="auth-subtitle">Pull up a chair.</p>
 
       <form class="auth-form" @submit.prevent="handleLogin">
         <div class="form-group">

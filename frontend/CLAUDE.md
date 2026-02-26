@@ -1,4 +1,4 @@
-# SousChefAI Frontend
+# Companis Frontend
 
 Vue 3 SPA with TypeScript, Pinia, and Capacitor for mobile.
 
@@ -52,7 +52,7 @@ Stores in `src/stores/` use `defineStore` with setup syntax. Each store handles 
 
 ## Mobile (Capacitor)
 
-Config in `capacitor.config.ts`. App ID: `com.souschefai.app`. Uses Camera plugin for ingredient scanning.
+Config in `capacitor.config.ts`. App ID: `com.companis.app`. Uses Camera plugin for ingredient scanning.
 
 ```bash
 npm run build                      # build web assets

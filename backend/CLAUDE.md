@@ -1,4 +1,4 @@
-# SousChefAI Backend
+# Companis Backend
 
 Python 3.12 FastAPI backend with async SQLAlchemy, Pydantic Settings, and pluggable AI providers.
 

@@ -24,7 +24,7 @@ class TestDefaultSettings:
 
     def test_default_app_name(self) -> None:
         s = Settings(_env_file=None, _cli_parse_args=[])  # type: ignore[call-arg]
-        assert s.app_name == "SousChefAI"
+        assert s.app_name == "Companis"
 
     def test_default_debug(self) -> None:
         s = Settings(_env_file=None, _cli_parse_args=[])  # type: ignore[call-arg]
@@ -194,7 +194,7 @@ class TestSettingsCustomiseSources:
         """Ensure all original fields still exist with correct defaults."""
         s = Settings(_env_file=None, _cli_parse_args=[])  # type: ignore[call-arg]
         assert s.secret_key == "change-me-in-production"
-        assert s.database_url == "sqlite+aiosqlite:///./souschefai.db"
+        assert s.database_url == "sqlite+aiosqlite:///./companis.db"
         assert s.google_client_id == ""
         assert s.google_client_secret == ""
         assert s.facebook_client_id == ""

@@ -183,7 +183,7 @@ describe('RegisterView', () => {
 
   it('renders subtitle text', () => {
     const wrapper = mountView()
-    expect(wrapper.find('.auth-subtitle').text()).toBe('Join SousChefAI and start cooking smarter')
+    expect(wrapper.find('.auth-subtitle').text()).toBe('Pull up a chair.')
   })
 
   it('clears validation error on subsequent valid submit', async () => {
