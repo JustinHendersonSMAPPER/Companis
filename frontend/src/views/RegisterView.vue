@@ -53,11 +53,11 @@ async function handleRegister(): Promise<void> {
       <form class="auth-form" @submit.prevent="handleRegister">
         <div class="form-group">
           <label for="fullName">Full Name</label>
-          <input id="fullName" v-model="fullName" type="text" placeholder="Your name" required />
+          <input id="fullName" v-model="fullName" type="text" placeholder="Your name" required autocomplete="name" aria-required="true" />
         </div>
         <div class="form-group">
           <label for="email">Email</label>
-          <input id="email" v-model="email" type="email" placeholder="you@example.com" required />
+          <input id="email" v-model="email" type="email" placeholder="you@example.com" required autocomplete="email" aria-required="true" />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -67,6 +67,8 @@ async function handleRegister(): Promise<void> {
             type="password"
             placeholder="At least 8 characters"
             required
+            autocomplete="new-password"
+            aria-required="true"
           />
         </div>
         <div class="form-group">
@@ -77,6 +79,8 @@ async function handleRegister(): Promise<void> {
             type="password"
             placeholder="Confirm your password"
             required
+            autocomplete="new-password"
+            aria-required="true"
           />
         </div>
 
@@ -99,7 +103,7 @@ async function handleRegister(): Promise<void> {
           </label>
         </div>
 
-        <p v-if="validationError || authStore.error" class="error-text">
+        <p v-if="validationError || authStore.error" class="error-text" role="alert" aria-live="polite">
           {{ validationError ?? authStore.error }}
         </p>
         <button class="btn-primary full-width" type="submit" :disabled="authStore.loading">
@@ -174,7 +178,7 @@ async function handleRegister(): Promise<void> {
 }
 
 .terms-text {
-  font-size: 0.7rem;
+  font-size: 0.8125rem;
   white-space: pre-wrap;
   font-family: inherit;
   line-height: 1.4;

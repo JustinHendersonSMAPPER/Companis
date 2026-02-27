@@ -74,3 +74,17 @@ class CameraScanRequest(BaseModel):
 class CameraScanResult(BaseModel):
     detected_ingredients: list[str]
     confidence_scores: dict[str, float]
+
+
+class PaginatedIngredientResponse(BaseModel):
+    items: list[IngredientResponse]
+    total: int
+    limit: int
+    offset: int
+
+
+class PaginatedHouseholdIngredientResponse(BaseModel):
+    items: list[HouseholdIngredientResponse]
+    total: int
+    limit: int
+    offset: int

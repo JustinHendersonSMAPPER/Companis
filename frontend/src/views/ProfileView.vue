@@ -111,13 +111,13 @@ async function removeGoal(id: string): Promise<void> {
             <span class="pref-type">{{ pref.preference_type }}</span>
             <span class="pref-value">{{ pref.value }}</span>
           </div>
-          <button class="remove-btn" type="button" @click="removePreference(pref.id)">x</button>
+          <button class="remove-btn" type="button" :aria-label="`Remove ${pref.value} preference`" @click="removePreference(pref.id)">&times;</button>
         </div>
       </div>
       <form class="add-form" @submit.prevent="addPreference">
         <select v-model="newPrefType" required>
           <option value="">Type...</option>
-          <option v-for="t in prefTypes" :key="t" :value="t">{{ t }}</option>
+          <option v-for="t in prefTypes" :key="t" :value="t">{{ t.charAt(0).toUpperCase() + t.slice(1) }}</option>
         </select>
         <input v-model="newPrefValue" type="text" placeholder="e.g., nuts, gluten, vegan" required />
         <button class="btn-primary" type="submit">Add</button>
@@ -133,7 +133,7 @@ async function removeGoal(id: string): Promise<void> {
             <span class="goal-type">{{ goal.goal_type.replace("_", " ") }}</span>
             <span class="goal-desc">{{ goal.description }}</span>
           </div>
-          <button class="remove-btn" type="button" @click="removeGoal(goal.id)">x</button>
+          <button class="remove-btn" type="button" :aria-label="`Remove ${goal.goal_type} goal`" @click="removeGoal(goal.id)">&times;</button>
         </div>
       </div>
       <form class="add-form" @submit.prevent="addGoal">
@@ -169,7 +169,7 @@ async function removeGoal(id: string): Promise<void> {
 }
 
 .provider {
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
   margin-bottom: 0.75rem;
   text-transform: capitalize;
@@ -195,7 +195,7 @@ async function removeGoal(id: string): Promise<void> {
   color: white;
   padding: 0.125rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   margin-right: 0.5rem;
   text-transform: capitalize;
 }

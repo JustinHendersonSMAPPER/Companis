@@ -35,7 +35,7 @@ class HouseholdIngredient(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     household_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("households.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("households.id", ondelete="CASCADE"), nullable=False, index=True
     )
     ingredient_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("ingredients.id", ondelete="CASCADE"), nullable=False

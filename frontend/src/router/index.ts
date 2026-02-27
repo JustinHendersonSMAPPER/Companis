@@ -20,6 +20,12 @@ const router = createRouter({
       component: () => import("@/views/RegisterView.vue"),
     },
     {
+      path: "/onboarding",
+      name: "onboarding",
+      component: () => import("@/views/OnboardingView.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/oauth/callback/:provider",
       name: "oauth-callback",
       component: () => import("@/views/OAuthCallbackView.vue"),
@@ -52,6 +58,12 @@ const router = createRouter({
       path: "/shopping",
       name: "shopping",
       component: () => import("@/views/ShoppingView.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/meal-plan",
+      name: "meal-plan",
+      component: () => import("@/views/MealPlanView.vue"),
       meta: { requiresAuth: true },
     },
     {

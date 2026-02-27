@@ -163,6 +163,47 @@ export const shoppingApi = {
     api.post<ShoppingCartItem[]>("/shopping/add-missing-ingredients", data),
 };
 
+// Meal Plan
+export const mealPlanApi = {
+  getEntries: (startDate: string, endDate: string) =>
+    api.get("/meal-plan/", { params: { start_date: startDate, end_date: endDate } }),
+  create: (data: {
+    recipe_id: string;
+    meal_date: string;
+    meal_type: string;
+    servings?: number;
+    notes?: string;
+  }) => api.post("/meal-plan/", data),
+  update: (id: string, data: { meal_date?: string; meal_type?: string; servings?: number; notes?: string }) =>
+    api.put(`/meal-plan/${id}`, data),
+  remove: (id: string) => api.delete(`/meal-plan/${id}`),
+  generateShoppingList: (startDate: string, endDate: string) =>
+    api.post("/meal-plan/generate-shopping-list", null, {
+      params: { start_date: startDate, end_date: endDate },
+    }),
+};
+
+// Cooking History
+export const cookingHistoryApi = {
+  log: (data: { recipe_id: string; servings_made?: number; notes?: string }) =>
+    api.post("/cooking-history/", data),
+  getHistory: (limit = 20, offset = 0) =>
+    api.get("/cooking-history/", { params: { limit, offset } }),
+};
+
+// Collections
+export const collectionsApi = {
+  list: () => api.get("/collections/"),
+  create: (data: { name: string; description?: string }) =>
+    api.post("/collections/", data),
+  get: (id: string) => api.get(`/collections/${id}`),
+  addRecipe: (id: string, recipeId: string) =>
+    api.post(`/collections/${id}/recipes`, { recipe_id: recipeId }),
+  removeRecipe: (id: string, recipeId: string) =>
+    api.delete(`/collections/${id}/recipes/${recipeId}`),
+  remove: (id: string) => api.delete(`/collections/${id}`),
+};
+
 // AI
 export const aiApi = {
   getProviders: () => api.get<{ current_provider: string; available_providers: string[] }>("/ai/providers"),

@@ -90,3 +90,10 @@ class RecipeRatingResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class PaginatedFavoritesResponse(BaseModel):
+    items: list[RecipeResponse]
+    total: int
+    limit: int
+    offset: int

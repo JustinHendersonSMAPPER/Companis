@@ -71,9 +71,13 @@ async function removeItem(cartId: string, itemId: string): Promise<void> {
           class="cart-item"
           :class="{ purchased: item.is_purchased }"
         >
-          <button class="check-btn" type="button" @click="toggleItem(cart.id, item.id)">
-            {{ item.is_purchased ? "[x]" : "[ ]" }}
-          </button>
+          <input
+            type="checkbox"
+            class="check-input"
+            :checked="item.is_purchased"
+            :aria-label="`Mark ${item.name} as ${item.is_purchased ? 'not purchased' : 'purchased'}`"
+            @change="toggleItem(cart.id, item.id)"
+          />
           <div class="item-info">
             <span class="item-name">{{ item.name }}</span>
             <span v-if="item.quantity" class="item-qty">
@@ -81,8 +85,8 @@ async function removeItem(cartId: string, itemId: string): Promise<void> {
             </span>
             <span v-if="item.notes" class="item-notes">{{ item.notes }}</span>
           </div>
-          <button class="remove-btn" type="button" @click="removeItem(cart.id, item.id)">
-            x
+          <button class="remove-btn" type="button" aria-label="Remove item" @click="removeItem(cart.id, item.id)">
+            &times;
           </button>
         </div>
       </div>
@@ -143,11 +147,12 @@ async function removeItem(cartId: string, itemId: string): Promise<void> {
   color: var(--text-secondary);
 }
 
-.check-btn {
-  background: none;
-  padding: 0.25rem;
-  font-family: monospace;
-  font-size: 1rem;
+.check-input {
+  width: auto;
+  min-width: 20px;
+  min-height: 20px;
+  accent-color: var(--primary);
+  cursor: pointer;
 }
 
 .item-info {
@@ -161,7 +166,7 @@ async function removeItem(cartId: string, itemId: string): Promise<void> {
 }
 
 .item-qty {
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
 }
 
@@ -176,5 +181,10 @@ async function removeItem(cartId: string, itemId: string): Promise<void> {
   color: var(--error);
   font-size: 1.25rem;
   padding: 0.25rem 0.5rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

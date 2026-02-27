@@ -8,8 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.ai import router as ai_router
 from app.api.auth import router as auth_router
+from app.api.collections import router as collections_router
+from app.api.cooking_history import router as cooking_history_router
 from app.api.household import router as household_router
 from app.api.ingredients import router as ingredients_router
+from app.api.meal_plan import router as meal_plan_router
 from app.api.recipes import router as recipes_router
 from app.api.shopping import router as shopping_router
 from app.api.users import router as users_router
@@ -44,6 +47,9 @@ app.include_router(ingredients_router, prefix="/api/ingredients", tags=["Ingredi
 app.include_router(recipes_router, prefix="/api/recipes", tags=["Recipes"])
 app.include_router(household_router, prefix="/api/household", tags=["Household"])
 app.include_router(shopping_router, prefix="/api/shopping", tags=["Shopping"])
+app.include_router(meal_plan_router, prefix="/api/meal-plan", tags=["Meal Plan"])
+app.include_router(cooking_history_router, prefix="/api/cooking-history", tags=["Cooking History"])
+app.include_router(collections_router, prefix="/api/collections", tags=["Collections"])
 app.include_router(ai_router, prefix="/api/ai", tags=["AI"])
 
 
