@@ -160,3 +160,42 @@ export interface ParsedIngredient {
 export interface VoiceInputResult {
   ingredients: ParsedIngredient[];
 }
+
+export interface MealPlanEntry {
+  id: string;
+  household_id: string;
+  recipe_id: string;
+  recipe_title?: string;
+  meal_date: string;
+  meal_type: string;
+  servings: number;
+  notes: string | null;
+  created_by_user_id: string | null;
+  created_at: string;
+}
+
+export interface CookingHistoryEntry {
+  id: string;
+  user_id: string;
+  recipe_id: string;
+  household_id: string;
+  servings_made: number | null;
+  notes: string | null;
+  cooked_at: string;
+  created_at: string;
+}
+
+export interface RecipeCollection {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  created_at: string;
+}
+
+export interface RecipeCollectionItem {
+  id: string;
+  collection_id: string;
+  recipe_id: string;
+  added_at: string;
+}

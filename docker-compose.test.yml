@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  backend-test:
+    build: ./backend
+    ports:
+      - "6000:6000"
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./test_e2e.db
+      - AI_PROVIDER=ollama
+      - SECRET_KEY=test-secret-key-for-e2e
+      - DEBUG=true
+    command: uvicorn app.main:app --host 0.0.0.0 --port 6000 --reload
+    volumes:
+      - ./backend:/app
+
+  frontend-test:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "6001:80"
+    depends_on:
+      - backend-test

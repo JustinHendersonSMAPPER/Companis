@@ -112,11 +112,13 @@ async function addDetectedIngredient(name: string): Promise<void> {
   <div class="scan-view">
     <h1>Scan Ingredients</h1>
 
-    <div class="tab-bar">
+    <div class="tab-bar" role="tablist" aria-label="Scan method">
       <button
         class="tab"
         :class="{ active: activeTab === 'barcode' }"
         type="button"
+        role="tab"
+        :aria-selected="activeTab === 'barcode'"
         @click="activeTab = 'barcode'"
       >
         Barcode Scanner
@@ -125,6 +127,8 @@ async function addDetectedIngredient(name: string): Promise<void> {
         class="tab"
         :class="{ active: activeTab === 'camera' }"
         type="button"
+        role="tab"
+        :aria-selected="activeTab === 'camera'"
         @click="activeTab = 'camera'"
       >
         Camera Scan
@@ -300,7 +304,7 @@ async function addDetectedIngredient(name: string): Promise<void> {
 }
 
 .confidence {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
 }
 

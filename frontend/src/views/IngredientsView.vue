@@ -144,7 +144,7 @@ async function removeIngredient(id: string): Promise<void> {
             </span>
             <span class="source-badge">{{ item.source }}</span>
           </div>
-          <button class="remove-btn" type="button" @click="removeIngredient(item.id)">
+          <button class="remove-btn" type="button" :aria-label="`Remove ${item.ingredient.name}`" @click="removeIngredient(item.id)">
             Remove
           </button>
         </div>
@@ -224,12 +224,12 @@ async function removeIngredient(id: string): Promise<void> {
 }
 
 .category {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--primary);
 }
 
 .source-badge {
-  font-size: 0.7rem;
+  font-size: 0.8125rem;
   background: var(--border);
   padding: 0.1rem 0.4rem;
   border-radius: 4px;

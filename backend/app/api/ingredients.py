@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import delete, select
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -18,21 +18,42 @@ from app.schemas.ingredient import (
     HouseholdIngredientUpdate,
     IngredientCreate,
     IngredientResponse,
+    PaginatedIngredientResponse,
+    PaginatedHouseholdIngredientResponse,
 )
 
 router = APIRouter()
 
 
-@router.get("/search", response_model=list[IngredientResponse])
+@router.get("/search", response_model=PaginatedIngredientResponse)
 async def search_ingredients(
     q: str,
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
     db: AsyncSession = Depends(get_db),
     _current_user: User = Depends(get_current_user),
-) -> list[Ingredient]:
-    result = await db.execute(
-        select(Ingredient).where(Ingredient.name.ilike(f"%{q}%")).limit(20)
+) -> PaginatedIngredientResponse:
+    count_result = await db.execute(
+        select(func.count())
+        .select_from(Ingredient)
+        .where(Ingredient.name.ilike(f"%{q}%"))
     )
-    return list(result.scalars().all())
+    total = count_result.scalar() or 0
+
+    result = await db.execute(
+        select(Ingredient)
+        .where(Ingredient.name.ilike(f"%{q}%"))
+        .order_by(Ingredient.name)
+        .limit(limit)
+        .offset(offset)
+    )
+    items = list(result.scalars().all())
+    return PaginatedIngredientResponse(
+        items=[IngredientResponse.model_validate(item) for item in items],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.post("/", response_model=IngredientResponse, status_code=status.HTTP_201_CREATED)
@@ -54,17 +75,35 @@ async def create_ingredient(
     return ingredient
 
 
-@router.get("/household", response_model=list[HouseholdIngredientResponse])
+@router.get("/household", response_model=PaginatedHouseholdIngredientResponse)
 async def get_household_ingredients(
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     household_id: str = Depends(get_user_household_id),
     db: AsyncSession = Depends(get_db),
-) -> list[HouseholdIngredient]:
+) -> PaginatedHouseholdIngredientResponse:
+    count_result = await db.execute(
+        select(func.count())
+        .select_from(HouseholdIngredient)
+        .where(HouseholdIngredient.household_id == household_id)
+    )
+    total = count_result.scalar() or 0
+
     result = await db.execute(
         select(HouseholdIngredient)
         .where(HouseholdIngredient.household_id == household_id)
         .options(selectinload(HouseholdIngredient.ingredient))
+        .order_by(HouseholdIngredient.created_at.desc())
+        .limit(limit)
+        .offset(offset)
     )
-    return list(result.scalars().all())
+    items = list(result.scalars().all())
+    return PaginatedHouseholdIngredientResponse(
+        items=[HouseholdIngredientResponse.model_validate(item) for item in items],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.post(

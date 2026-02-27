@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -10,6 +10,7 @@ from app.database import get_db
 from app.models.recipe import Recipe, RecipeRating, UserFavorite
 from app.models.user import User
 from app.schemas.recipe import (
+    PaginatedFavoritesResponse,
     RecipeRatingCreate,
     RecipeRatingResponse,
     RecipeResponse,
@@ -48,6 +49,7 @@ async def get_recipe(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> RecipeResponse:
+    # Query 1: Recipe with eagerly loaded ingredients
     result = await db.execute(
         select(Recipe)
         .where(Recipe.id == recipe_id)
@@ -57,26 +59,36 @@ async def get_recipe(
     if recipe is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Recipe not found")
 
-    avg_result = await db.execute(
-        select(func.avg(RecipeRating.score)).where(RecipeRating.recipe_id == recipe_id)
+    # Query 2: Combine avg rating, user rating, and favorite status into one query
+    avg_rating_subq = (
+        select(func.avg(RecipeRating.score))
+        .where(RecipeRating.recipe_id == recipe_id)
+        .correlate(None)
+        .scalar_subquery()
     )
-    avg_rating = avg_result.scalar()
-
-    user_rating_result = await db.execute(
-        select(RecipeRating.score).where(
+    user_rating_subq = (
+        select(RecipeRating.score)
+        .where(
             RecipeRating.recipe_id == recipe_id,
             RecipeRating.user_id == current_user.id,
         )
+        .correlate(None)
+        .scalar_subquery()
     )
-    user_rating = user_rating_result.scalar_one_or_none()
-
-    fav_result = await db.execute(
-        select(UserFavorite.id).where(
+    fav_subq = (
+        select(func.count(UserFavorite.id))
+        .where(
             UserFavorite.recipe_id == recipe_id,
             UserFavorite.user_id == current_user.id,
         )
+        .correlate(None)
+        .scalar_subquery()
     )
-    is_favorite = fav_result.scalar_one_or_none() is not None
+    meta_result = await db.execute(
+        select(avg_rating_subq, user_rating_subq, fav_subq)
+    )
+    row = meta_result.one()
+    avg_rating, user_rating, fav_count = row[0], row[1], row[2]
 
     ingredients = [
         {
@@ -108,7 +120,7 @@ async def get_recipe(
         recipe_ingredients=ingredients,
         average_rating=float(avg_rating) if avg_rating else None,
         user_rating=user_rating,
-        is_favorite=is_favorite,
+        is_favorite=fav_count > 0,
     )
 
 
@@ -189,19 +201,31 @@ async def remove_favorite(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Favorite not found")
 
 
-@router.get("/favorites/list", response_model=list[RecipeResponse])
+@router.get("/favorites/list", response_model=PaginatedFavoritesResponse)
 async def get_favorites(
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> list[RecipeResponse]:
+) -> PaginatedFavoritesResponse:
+    count_result = await db.execute(
+        select(func.count())
+        .select_from(UserFavorite)
+        .where(UserFavorite.user_id == current_user.id)
+    )
+    total = count_result.scalar() or 0
+
     result = await db.execute(
         select(Recipe)
         .join(UserFavorite, UserFavorite.recipe_id == Recipe.id)
         .where(UserFavorite.user_id == current_user.id)
         .options(selectinload(Recipe.recipe_ingredients))
+        .order_by(UserFavorite.created_at.desc())
+        .limit(limit)
+        .offset(offset)
     )
     recipes = result.scalars().all()
-    return [
+    items = [
         RecipeResponse(
             id=r.id,
             title=r.title,
@@ -232,3 +256,9 @@ async def get_favorites(
         )
         for r in recipes
     ]
+    return PaginatedFavoritesResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
+    )

@@ -32,7 +32,7 @@ function loginWithFacebook(): void {
       <form class="auth-form" @submit.prevent="handleLogin">
         <div class="form-group">
           <label for="email">Email</label>
-          <input id="email" v-model="email" type="email" placeholder="you@example.com" required />
+          <input id="email" v-model="email" type="email" placeholder="you@example.com" required autocomplete="email" aria-required="true" />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
@@ -42,9 +42,11 @@ function loginWithFacebook(): void {
             type="password"
             placeholder="Your password"
             required
+            autocomplete="current-password"
+            aria-required="true"
           />
         </div>
-        <p v-if="authStore.error" class="error-text">{{ authStore.error }}</p>
+        <p v-if="authStore.error" class="error-text" role="alert" aria-live="polite">{{ authStore.error }}</p>
         <button class="btn-primary full-width" type="submit" :disabled="authStore.loading">
           {{ authStore.loading ? "Signing in..." : "Sign In" }}
         </button>

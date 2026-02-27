@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Text, func
+from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -37,7 +37,7 @@ class FamilyMember(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     household_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("households.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("households.id", ondelete="CASCADE"), nullable=False, index=True
     )
     user_id: Mapped[str | None] = mapped_column(
         String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True
@@ -47,6 +47,11 @@ class FamilyMember(Base):
     dietary_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
+    )
+
+    # Note: This constraint only applies when user_id is not null (enforced at app level)
+    __table_args__ = (
+        UniqueConstraint("household_id", "user_id", name="uq_household_user_member"),
     )
 
     household: Mapped[Household] = relationship(back_populates="members")

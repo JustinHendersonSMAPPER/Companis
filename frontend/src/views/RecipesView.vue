@@ -47,11 +47,13 @@ async function addToShoppingList(recipeId: string): Promise<void> {
   <div class="recipes-view">
     <h1>Recipes</h1>
 
-    <div class="tab-bar">
+    <div class="tab-bar" role="tablist" aria-label="Recipe tabs">
       <button
         class="tab"
         :class="{ active: activeTab === 'search' }"
         type="button"
+        role="tab"
+        :aria-selected="activeTab === 'search'"
         @click="activeTab = 'search'"
       >
         Search
@@ -60,6 +62,8 @@ async function addToShoppingList(recipeId: string): Promise<void> {
         class="tab"
         :class="{ active: activeTab === 'favorites' }"
         type="button"
+        role="tab"
+        :aria-selected="activeTab === 'favorites'"
         @click="activeTab = 'favorites'"
       >
         Favorites ({{ recipesStore.favorites.length }})
@@ -230,7 +234,7 @@ async function addToShoppingList(recipeId: string): Promise<void> {
 .recipe-meta {
   display: flex;
   gap: 0.75rem;
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   color: var(--text-secondary);
   margin-bottom: 0.5rem;
 }
@@ -247,10 +251,11 @@ async function addToShoppingList(recipeId: string): Promise<void> {
 }
 
 .action-btn {
-  padding: 0.4rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   background: var(--border);
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   font-weight: 500;
+  min-height: 44px;
 }
 
 .action-btn.shop {
@@ -263,7 +268,7 @@ async function addToShoppingList(recipeId: string): Promise<void> {
   padding: 0.5rem;
   background: #fff3e0;
   border-radius: var(--radius);
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
 }
 
 .substitution-notice ul {
@@ -276,7 +281,7 @@ async function addToShoppingList(recipeId: string): Promise<void> {
   padding: 0.5rem;
   background: #ffebee;
   border-radius: var(--radius);
-  font-size: 0.8rem;
+  font-size: 0.8125rem;
   color: var(--error);
 }
 

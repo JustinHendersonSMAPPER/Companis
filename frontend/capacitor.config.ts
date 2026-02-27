@@ -7,9 +7,25 @@ const config: CapacitorConfig = {
   server: {
     androidScheme: "https",
   },
+  ios: {
+    preferredContentMode: "mobile",
+  },
   plugins: {
     Camera: {
       permissions: ["camera", "photos"],
+    },
+    Keyboard: {
+      resize: "native",
+      resizeOnFullScreen: true,
+    },
+    StatusBar: {
+      style: "light",
+      backgroundColor: "#4caf50",
+    },
+    SplashScreen: {
+      launchAutoHide: true,
+      launchShowDuration: 2000,
+      backgroundColor: "#fafafa",
     },
   },
 };

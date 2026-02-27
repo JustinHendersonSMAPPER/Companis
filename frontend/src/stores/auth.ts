@@ -29,7 +29,13 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
     try {
       await authApi.register({ email, password, full_name: fullName, terms_accepted: true });
-      await login(email, password);
+      // Login then redirect new users to onboarding
+      const { data } = await authApi.login({ email, password });
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token);
+      const userResp = await usersApi.getMe();
+      user.value = userResp.data;
+      await router.push("/onboarding");
     } catch (e: unknown) {
       const err = e as { response?: { data?: { detail?: string } } };
       error.value = err.response?.data?.detail ?? "Registration failed";

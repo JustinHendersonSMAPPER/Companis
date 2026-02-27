@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, func
+from sqlalchemy import DateTime, Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -76,6 +76,8 @@ class RecipeRating(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
+    __table_args__ = (Index("idx_recipe_user_rating", "recipe_id", "user_id"),)
+
     recipe: Mapped[Recipe] = relationship(back_populates="ratings")
     user: Mapped[User] = relationship(back_populates="ratings")  # noqa: F821
 
@@ -94,5 +96,47 @@ class UserFavorite(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
+    __table_args__ = (UniqueConstraint("recipe_id", "user_id", name="uq_user_recipe_favorite"),)
+
     user: Mapped[User] = relationship(back_populates="favorites")  # noqa: F821
     recipe: Mapped[Recipe] = relationship(back_populates="favorites")
+
+
+class RecipeCollection(Base):
+    __tablename__ = "recipe_collections"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    items: Mapped[list[RecipeCollectionItem]] = relationship(
+        back_populates="collection", cascade="all, delete-orphan"
+    )
+
+
+class RecipeCollectionItem(Base):
+    __tablename__ = "recipe_collection_items"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    collection_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("recipe_collections.id", ondelete="CASCADE"), nullable=False
+    )
+    recipe_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("recipes.id", ondelete="CASCADE"), nullable=False
+    )
+    added_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+
+    __table_args__ = (
+        UniqueConstraint("collection_id", "recipe_id", name="uq_collection_recipe"),
+    )
+
+    collection: Mapped[RecipeCollection] = relationship(back_populates="items")
+    recipe: Mapped[Recipe] = relationship()
